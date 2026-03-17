@@ -277,7 +277,7 @@
           </div>
         </div>
         <div style="margin-top:12px">
-          <input type="text" id="myContact" placeholder="연락처 (기프티콘 발송용, 예: 010-1234-5678)" />
+          <input type="text" id="myContact" placeholder="010-1234-5678" maxlength="13" oninput="formatPhone(this)" inputmode="numeric" />
           <div class="error-msg" id="err-myContact">연락처를 입력해주세요.</div>
         </div>
       </div>
@@ -372,6 +372,17 @@
     let isSelf = false;
     const scriptUrl = 'https://script.google.com/macros/s/AKfycbx2Yz_6Ft6_f8UsUFL-R56r5sviVdzU6lu_dD_neKx5w2LeUvhngP_RB88rZIB5aaNY/exec';
 
+    function formatPhone(input) {
+      let val = input.value.replace(/\D/g, '');
+      if (val.length <= 3) {
+        input.value = val;
+      } else if (val.length <= 7) {
+        input.value = val.slice(0, 3) + '-' + val.slice(3);
+      } else {
+        input.value = val.slice(0, 3) + '-' + val.slice(3, 7) + '-' + val.slice(7, 11);
+      }
+    }
+
     function selectType(type) {
       selectedType = type;
       document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
@@ -406,7 +417,10 @@
       let valid = true;
       if (!document.getElementById('myName').value.trim()) { showError('err-myName', true); valid = false; } else showError('err-myName', false);
       if (!document.getElementById('myDept').value.trim()) { showError('err-myDept', true); valid = false; } else showError('err-myDept', false);
-      if (!document.getElementById('myContact').value.trim()) { showError('err-myContact', true); valid = false; } else showError('err-myContact', false);
+      const contact = document.getElementById('myContact').value.trim();
+      if (!contact) { showError('err-myContact', true); document.getElementById('err-myContact').textContent = '연락처를 입력해주세요.'; valid = false; }
+      else if (!/^\d{2,3}-\d{3,4}-\d{4}$/.test(contact)) { showError('err-myContact', true); document.getElementById('err-myContact').textContent = '올바른 형식으로 입력해주세요. (예: 010-1234-5678)'; valid = false; }
+      else showError('err-myContact', false);
       if (!selectedType) { document.getElementById('err-type').style.display = 'block'; valid = false; } else document.getElementById('err-type').style.display = 'none';
       if (!isSelf) {
         if (!document.getElementById('nomineeName').value.trim()) { showError('err-nomineeName', true); valid = false; } else showError('err-nomineeName', false);
