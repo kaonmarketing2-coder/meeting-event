@@ -276,6 +276,10 @@
             <div class="error-msg" id="err-myDept">부서명을 입력해주세요.</div>
           </div>
         </div>
+        <div style="margin-top:12px">
+          <input type="text" id="myContact" placeholder="연락처 (기프티콘 발송용, 예: 010-1234-5678)" />
+          <div class="error-msg" id="err-myContact">연락처를 입력해주세요.</div>
+        </div>
       </div>
 
       <hr class="divider">
@@ -402,6 +406,7 @@
       let valid = true;
       if (!document.getElementById('myName').value.trim()) { showError('err-myName', true); valid = false; } else showError('err-myName', false);
       if (!document.getElementById('myDept').value.trim()) { showError('err-myDept', true); valid = false; } else showError('err-myDept', false);
+      if (!document.getElementById('myContact').value.trim()) { showError('err-myContact', true); valid = false; } else showError('err-myContact', false);
       if (!selectedType) { document.getElementById('err-type').style.display = 'block'; valid = false; } else document.getElementById('err-type').style.display = 'none';
       if (!isSelf) {
         if (!document.getElementById('nomineeName').value.trim()) { showError('err-nomineeName', true); valid = false; } else showError('err-nomineeName', false);
@@ -427,6 +432,7 @@
 
       const payload = {
         myName: document.getElementById('myName').value.trim(),
+        myContact: document.getElementById('myContact').value.trim(),
         myDept: document.getElementById('myDept').value.trim(),
         certType: selectedType,
         isSelf: isSelf,
