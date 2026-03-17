@@ -73,41 +73,6 @@
     }
     .period-box strong { color: #111; font-weight: 600; }
 
-    .url-setup {
-      background: #F0FAF6;
-      border: 1.5px dashed #5DCAA5;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 28px;
-    }
-    .url-setup-label { font-size: 12px; font-weight: 700; color: #1D9E75; margin-bottom: 6px; }
-    .url-setup-desc { font-size: 12px; color: #777; margin-bottom: 10px; }
-    .url-row { display: flex; gap: 8px; }
-    .url-row input {
-      flex: 1;
-      font-size: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 8px 12px;
-      outline: none;
-    }
-    .url-row input:focus { border-color: #1D9E75; }
-    .url-row button {
-      font-size: 12px;
-      white-space: nowrap;
-      padding: 0 16px;
-      background: #1D9E75;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .url-row button:hover { background: #0F6E56; }
-    .url-status { font-size: 12px; margin-top: 8px; color: #aaa; }
-    .url-status.ok { color: #1D9E75; font-weight: 600; }
-    .url-status.err { color: #D85A30; }
-
     .section { margin-bottom: 24px; }
     .section-label {
       font-size: 13px;
@@ -298,21 +263,6 @@
         <span>이벤트 기간 <strong>3월 19일(목) ~ 3월 25일(수)</strong> · 참여자 전원 커피 기프티콘 증정</span>
       </div>
 
-      <!-- Google Sheets URL 설정 -->
-      <div class="url-setup" id="url-setup-box">
-        <div class="url-setup-label">🔗 관리자 설정 — Google Sheets 연동 URL</div>
-        <div class="url-setup-desc">Apps Script 배포 후 받은 웹 앱 URL을 입력하고 저장하세요. 최초 1회만 설정하면 됩니다.</div>
-        <div class="url-row">
-          <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec" />
-          <button onclick="saveUrl()">저장</button>
-        </div>
-        <div class="url-status" id="urlStatus"></div>
-      </div>
-      <div id="url-saved-bar" style="display:none; align-items:center; gap:10px; background:#E1F5EE; border:0.5px solid #5DCAA5; border-radius:10px; padding:10px 16px; margin-bottom:28px; font-size:13px; color:#0F6E56;">
-        <span>✓ Google Sheets 연동이 설정되어 있습니다.</span>
-        <button onclick="resetUrl()" style="margin-left:auto; font-size:12px; background:none; border:0.5px solid #5DCAA5; border-radius:6px; padding:4px 10px; color:#0F6E56; cursor:pointer;">URL 변경</button>
-      </div>
-
       <!-- 내 정보 -->
       <div class="section">
         <div class="section-label">내 정보<span class="required">*</span></div>
@@ -416,44 +366,7 @@
   <script>
     let selectedType = null;
     let isSelf = false;
-    let scriptUrl = '';
-
-    window.addEventListener('DOMContentLoaded', function() {
-      const saved = localStorage.getItem('gaon_script_url');
-      if (saved) {
-        scriptUrl = saved;
-        document.getElementById('scriptUrl').value = saved;
-        document.getElementById('url-setup-box').style.display = 'none';
-        document.getElementById('url-saved-bar').style.display = 'flex';
-      }
-    });
-
-    function saveUrl() {
-      const val = document.getElementById('scriptUrl').value.trim();
-      const status = document.getElementById('urlStatus');
-      if (!val.startsWith('https://script.google.com')) {
-        status.className = 'url-status err';
-        status.textContent = 'Apps Script URL 형식이 올바르지 않습니다.';
-        return;
-      }
-      scriptUrl = val;
-      localStorage.setItem('gaon_script_url', val);
-      status.className = 'url-status ok';
-      status.textContent = '✓ URL이 저장됐습니다. 이제 폼을 제출할 수 있어요.';
-      setTimeout(() => {
-        document.getElementById('url-setup-box').style.display = 'none';
-        document.getElementById('url-saved-bar').style.display = 'flex';
-      }, 800);
-    }
-
-    function resetUrl() {
-      localStorage.removeItem('gaon_script_url');
-      scriptUrl = '';
-      document.getElementById('scriptUrl').value = '';
-      document.getElementById('urlStatus').textContent = '';
-      document.getElementById('url-setup-box').style.display = 'block';
-      document.getElementById('url-saved-bar').style.display = 'none';
-    }
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbx2Yz_6Ft6_f8UsUFL-R56r5sviVdzU6lu_dD_neKx5w2LeUvhngP_RB88rZIB5aaNY/exec';
 
     function selectType(type) {
       selectedType = type;
@@ -486,10 +399,6 @@
     }
 
     async function submitForm() {
-      if (!scriptUrl) {
-        alert('상단에서 Google Sheets URL을 먼저 저장해주세요.');
-        return;
-      }
       let valid = true;
       if (!document.getElementById('myName').value.trim()) { showError('err-myName', true); valid = false; } else showError('err-myName', false);
       if (!document.getElementById('myDept').value.trim()) { showError('err-myDept', true); valid = false; } else showError('err-myDept', false);
